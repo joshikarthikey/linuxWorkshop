@@ -501,7 +501,123 @@ Together they changed the world
 -->
 
 <!-- end_slide -->
+WSL: Linux on Windows 💻
+<!-- end_slide -->
+What is WSL?
+<!-- pause -->
+WSL = Windows Subsystem for Linux
+<!-- pause -->
+mermaidgraph TB
+    subgraph Windows["Windows 10/11"]
+        subgraph WSL["WSL Layer"]
+            A[Linux Kernel] --> B[Ubuntu/Debian/etc.]
+            B --> C[bash, apt, Linux tools]
+        end
+        D[Windows Apps] 
+    end
+    
+    E[You] -->|Use both| D
+    E -->|Use both| C
+    
+    style WSL fill:#e3f2fd,stroke:#333,stroke-width:2px
+    style A fill:#c8e6c9,stroke:#333,stroke-width:2px
+<!-- pause -->
+What WSL Does:
 
+Runs a real Linux kernel on Windows
+Access Linux command line & tools
+No dual boot or VM needed
+Direct file system integration
+
+<!-- pause -->
+Two Versions:
+
+WSL 1: Translation layer (faster file access)
+WSL 2: Real Linux kernel (better compatibility) ⭐ Recommended
+
+<!-- speaker_note:
+WSL lets Windows users run Linux natively
+Perfect for developers who need both systems
+WSL 2 uses actual Linux kernel via virtualization
+Can run Docker, compile code, use Linux tools
+Files accessible from both Windows and Linux
+-->
+<!-- end_slide -->
+Setting Up WSL 2
+<!-- pause -->
+Quick Setup (Windows 11 / Windows 10 2004+)
+One Command (PowerShell as Admin):
+powershellwsl --install
+<!-- pause -->
+What This Does:
+<!-- incremental_lists: true -->
+
+Enables WSL feature
+Enables Virtual Machine Platform
+Installs latest Linux kernel
+Installs Ubuntu by default
+Restarts your computer
+
+<!-- pause -->
+After Restart:
+<!-- incremental_lists: true -->
+
+Ubuntu will auto-launch
+Create your Linux username
+Set your password
+You're in Linux! 🎉
+
+<!-- speaker_note:
+That's it! One command for modern Windows.
+After restart, Ubuntu terminal opens automatically.
+Username/password are for Linux only (separate from Windows).
+You now have full Linux environment.
+-->
+<!-- end_slide -->
+Using WSL
+<!-- pause -->
+Launch Linux:
+
+Start menu → "Ubuntu" (or your distro)
+Or type wsl in PowerShell/CMD
+Or Windows Terminal (recommended)
+
+<!-- pause -->
+File Access:
+<!-- columns -->
+<!-- column: 0.5 -->
+From Linux:
+bash# Access Windows C: drive
+cd /mnt/c/Users/YourName
+
+# Your files are here!
+ls /mnt/c/
+<!-- column: 0.5 -->
+From Windows:
+\\wsl$\Ubuntu\home\username
+
+Browse in File Explorer
+Edit with VS Code
+Full integration!
+
+<!-- reset_layout -->
+<!-- pause -->
+Useful Commands:
+bash# Update Linux packages
+sudo apt update && sudo apt upgrade
+
+# Install tools
+sudo apt install git python3 nodejs
+
+# Check WSL version
+wsl --list --verbose
+<!-- speaker_note:
+Windows Terminal gives best experience - tabs, themes
+Your Windows files at /mnt/c, /mnt/d, etc.
+Linux files accessible via \\wsl$ in Windows
+Can use Windows apps with Linux files and vice versa
+-->
+<!-- end_slide -->
 # Next Up: Hands-On! 🚀
 
 ## Part 2: File System & Navigation
