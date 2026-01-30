@@ -1,6 +1,6 @@
 ---
-title: "Shell Scripting & Process Management"
-author: "GDG Workshop - Aadesh Chaudhari"
+title: "GDG Linux Workshop"
+author: "Aadesh Chaudhari"
 theme:
   name: gruvbox-dark
   override:
@@ -15,6 +15,14 @@ options:
 ---
 
 # Shell Scripting
+```
+   _____ __         ____   _____           _       __  _            
+  / ___// /_  ___  / / /  / ___/__________(_)___  / /_(_)___  ____ _
+  \__ \/ __ \/ _ \/ / /   \__ \/ ___/ ___/ / __ \/ __/ / __ \/ __ `/
+ ___/ / / / /  __/ / /   ___/ / /__/ /  / / /_/ / /_/ / / / / /_/ / 
+/____/_/ /_/\___/_/_/   /____/\___/_/  /_/ .___/\__/_/_/ /_/\__, /  
+                                        /_/                 /____/   
+```
 
 ## What is Shell Scripting?
 
@@ -130,6 +138,24 @@ echo "New count: $COUNT"
 
 <!-- end_slide -->
 
+## Environment Variables
+
+**Global variables that affect how programs run.**
+
+* **`$HOME`**: Your home folder
+* **`$USER`**: Your username
+* **`$PATH`**: List of folders where Linux looks for commands
+
+**Why "Command Not Found"?**
+If a script is in `/home/user/scripts` but that folder isn't in `$PATH`, you must run it as `./script.sh`.
+
+```bash +exec
+echo "My home: $HOME"
+echo "My path: $PATH"
+```
+
+<!-- end_slide -->
+
 ## User Input
 
 **Make scripts interactive with `read` command**
@@ -187,6 +213,24 @@ echo "Second argument: $ARG2"
 ```bash
 ./my_script.sh DevOps 2024
 ```
+
+<!-- end_slide -->
+
+# Streams
+
+## Input, Output, and Errors
+
+**Every Linux command has 3 streams:**
+
+1. **STDIN (0):** Standard Input (Keyboard)
+2. **STDOUT (1):** Standard Output (Screen)
+3. **STDERR (2):** Standard Error (Screen, separate channel)
+
+**Redirection Operators:**
+* `>` : Save output to file (overwrite)
+* `>>` : Append output to file
+* `2>` : Redirect errors only
+* `<` : Read input from file
 
 <!-- end_slide -->
 
@@ -313,7 +357,7 @@ do
     sleep 1
 done
 
-echo "  🎉 Time's up!"
+echo "Time's up!"
 ```
 
 **When to use while:**
@@ -323,53 +367,52 @@ echo "  🎉 Time's up!"
 
 <!-- end_slide -->
 
-## Practical Example: Backup Script
+# Functions
 
-**Let's create a real-world backup script**
+## Writing Modular Code
 
-```bash +exec
+**Functions let you write code once and reuse it.**
+
+**Syntax:**
+```bash
+function_name() {
+    echo "Hello From GDG Linux Workshop"
+}
+```
+```bash
 #!/bin/bash
 
-# Backup script for workshop files
+# A function to add two numbers
+add_numbers() {
+    local A=$1
+    local B=$2
+    local SUM=$(( A + B ))
+    
+    # We echo the result to "return" it
+    echo $SUM
+}
 
-# Configuration
-SOURCE_DIR="workshop_files"
-BACKUP_DIR="backups"
-TIMESTAMP=$(date +%Y%m%d_%H%M%S)
-BACKUP_NAME="backup_$TIMESTAMP"
+# Capture the output
+RESULT=$(add_numbers 10 50)
 
-echo "=== Backup Script Started ==="
-echo ""
-
-# Create source directory with sample files
-mkdir -p "$SOURCE_DIR"
-for i in {1..3}; do
-    echo "Important data $i" > "$SOURCE_DIR/file$i.txt"
-done
-
-# Create backup directory
-mkdir -p "$BACKUP_DIR"
-
-# Perform backup
-echo "Backing up: $SOURCE_DIR"
-echo "Destination: $BACKUP_DIR/$BACKUP_NAME"
-cp -r "$SOURCE_DIR" "$BACKUP_DIR/$BACKUP_NAME"
-
-# Verify backup
-if [ -d "$BACKUP_DIR/$BACKUP_NAME" ]; then
-    FILE_COUNT=$(ls "$BACKUP_DIR/$BACKUP_NAME" | wc -l)
-    echo ""
-    echo "✓ Backup completed successfully!"
-    echo "  Files backed up: $FILE_COUNT"
-else
-    echo "✗ Backup failed!"
-fi
-
-# Cleanup
-rm -rf "$SOURCE_DIR" "$BACKUP_DIR"
+echo "The result is: $RESULT"
 ```
 
 <!-- end_slide -->
+
+
+```
+┌───────────────────────────────────────────────────────────────┐
+│                                                               │
+│   ██████╗ ██████╗  ██████╗  ██████╗███████╗███████╗███████╗   │
+│   ██╔══██╗██╔══██╗██╔═══██╗██╔════╝██╔════╝██╔════╝██╔════╝   │
+│   ██████╔╝██████╔╝██║   ██║██║     █████╗  ███████╗███████╗   │
+│   ██╔═══╝ ██╔══██╗██║   ██║██║     ██╔══╝  ╚════██║╚════██║   │
+│   ██║     ██║  ██║╚██████╔╝╚██████╗███████╗███████║███████║   │
+│   ╚═╝     ╚═╝  ╚═╝ ╚═════╝  ╚═════╝╚══════╝╚══════╝╚══════╝   │
+│                                                               │
+└───────────────────────────────────────────────────────────────┘
+```
 
 # Part 4: Process Management
 
@@ -594,333 +637,6 @@ echo "Function with fail: $?"
 
 <!-- end_slide -->
 
-## Job Control Demo Script
-
-**Complete example showing all concepts**
-
-```bash +exec
-#!/bin/bash
-
-echo "=== Job Control Demonstration ==="
-echo ""
-
-# Start multiple background jobs
-echo "Starting 3 background jobs..."
-sleep 5 &
-JOB1=$!
-sleep 10 &
-JOB2=$!
-sleep 15 &
-JOB3=$!
-
-echo "  Job 1 (PID $JOB1): sleep 5"
-echo "  Job 2 (PID $JOB2): sleep 10"
-echo "  Job 3 (PID $JOB3): sleep 15"
-echo ""
-
-# Show job status
-echo "Current jobs:"
-jobs
-echo ""
-
-# Wait for first job
-echo "Waiting for Job 1 to complete..."
-wait $JOB1
-echo "  ✓ Job 1 finished!"
-echo ""
-
-# Kill remaining jobs
-echo "Terminating remaining jobs..."
-kill $JOB2 $JOB3
-wait $JOB2 $JOB3 2>/dev/null
-
-echo "  ✓ All jobs cleaned up!"
-echo ""
-echo "=== Demo Complete ==="
-```
-
-<!-- end_slide -->
-
-# Part 5: Practical Examples
-
-## System Information Script
-
-**Create a system monitoring script**
-
-```bash +exec
-#!/bin/bash
-
-echo "╔════════════════════════════════════════════╗"
-echo "║      SYSTEM INFORMATION REPORT             ║"
-echo "╚════════════════════════════════════════════╝"
-echo ""
-
-# System Info
-echo "📋 System Information:"
-echo "  Hostname: $(hostname)"
-echo "  Kernel: $(uname -r)"
-echo "  OS: $(cat /etc/os-release | grep PRETTY_NAME | cut -d'"' -f2)"
-echo ""
-
-# Current User
-echo "👤 User Information:"
-echo "  Username: $(whoami)"
-echo "  User ID: $(id -u)"
-echo "  Home: $HOME"
-echo ""
-
-# Time
-echo "🕐 Time Information:"
-echo "  Date: $(date '+%Y-%m-%d')"
-echo "  Time: $(date '+%H:%M:%S')"
-echo "  Uptime: $(uptime -p)"
-echo ""
-
-# Disk Usage
-echo "💾 Disk Usage (/):"
-df -h / | tail -n 1 | awk '{print "  Used: "$3" / "$2" ("$5")"}'
-echo ""
-
-# Process Count
-PROC_COUNT=$(ps aux | wc -l)
-echo "⚙️  Running Processes: $PROC_COUNT"
-echo ""
-
-echo "Report generated at: $(date)"
-```
-
-<!-- end_slide -->
-
-## Log File Analyzer
-
-**Parse and analyze log files**
-
-```bash +exec
-#!/bin/bash
-
-LOG_FILE="system.log"
-
-# Create sample log file
-cat > "$LOG_FILE" << EOF
-2024-01-29 10:00:00 INFO Server started
-2024-01-29 10:05:23 WARNING High memory usage detected
-2024-01-29 10:10:45 ERROR Connection timeout
-2024-01-29 10:15:12 INFO User login: admin
-2024-01-29 10:20:33 ERROR Database connection failed
-2024-01-29 10:25:01 WARNING Disk space low
-2024-01-29 10:30:00 INFO Backup completed
-EOF
-
-echo "=== Log File Analysis ==="
-echo ""
-
-# Count different log levels
-ERROR_COUNT=$(grep -c "ERROR" "$LOG_FILE")
-WARNING_COUNT=$(grep -c "WARNING" "$LOG_FILE")
-INFO_COUNT=$(grep -c "INFO" "$LOG_FILE")
-
-echo "Summary:"
-echo "  Total lines: $(wc -l < $LOG_FILE)"
-echo "  Errors: $ERROR_COUNT"
-echo "  Warnings: $WARNING_COUNT"
-echo "  Info: $INFO_COUNT"
-echo ""
-
-# Show all errors
-echo "Error Messages:"
-grep "ERROR" "$LOG_FILE" | while read line; do
-    echo "  • $line"
-done
-
-# Clean up
-rm -f "$LOG_FILE"
-```
-
-<!-- end_slide -->
-
-## Process Monitor Script
-
-**Monitor specific processes**
-
-```bash +exec
-#!/bin/bash
-
-# Function to monitor process
-monitor_process() {
-    PROCESS_NAME=$1
-    
-    echo "Monitoring: $PROCESS_NAME"
-    echo "================================"
-    
-    # Check if process exists
-    if pgrep -x "$PROCESS_NAME" > /dev/null; then
-        echo "✓ Process is running"
-        
-        # Get process details
-        PID=$(pgrep -x "$PROCESS_NAME" | head -n 1)
-        echo "  PID: $PID"
-        
-        # Memory usage
-        MEM=$(ps -p $PID -o %mem= | xargs)
-        echo "  Memory: ${MEM}%"
-        
-        # CPU usage
-        CPU=$(ps -p $PID -o %cpu= | xargs)
-        echo "  CPU: ${CPU}%"
-    else
-        echo "✗ Process not found"
-    fi
-    echo ""
-}
-
-# Demo with bash (always running)
-monitor_process "bash"
-
-# Demo with non-existent process
-monitor_process "nonexistent_app"
-```
-
-<!-- end_slide -->
-
-## Automated Cleanup Script
-
-**Clean temporary files automatically**
-
-```bash +exec
-#!/bin/bash
-
-CLEANUP_DIR="temp_files"
-DAYS_OLD=7
-
-echo "=== Automated Cleanup Script ==="
-echo ""
-
-# Create demo directory with old files
-mkdir -p "$CLEANUP_DIR"
-echo "Creating demo files..."
-for i in {1..5}; do
-    FILE="$CLEANUP_DIR/temp_file_$i.txt"
-    echo "Temporary data $i" > "$FILE"
-    # Make some files appear old
-    if [ $i -le 3 ]; then
-        touch -d "10 days ago" "$FILE"
-    fi
-done
-
-echo "Files before cleanup:"
-ls -lh "$CLEANUP_DIR"
-echo ""
-
-# Find and delete old files
-echo "Searching for files older than $DAYS_OLD days..."
-OLD_FILES=$(find "$CLEANUP_DIR" -type f -mtime +$DAYS_OLD)
-
-if [ -n "$OLD_FILES" ]; then
-    echo "Found old files:"
-    echo "$OLD_FILES" | while read file; do
-        echo "  • $file"
-    done
-    
-    echo ""
-    echo "Deleting old files..."
-    find "$CLEANUP_DIR" -type f -mtime +$DAYS_OLD -delete
-    
-    DELETED_COUNT=$(echo "$OLD_FILES" | wc -l)
-    echo "✓ Deleted $DELETED_COUNT file(s)"
-else
-    echo "No old files found"
-fi
-
-echo ""
-echo "Files after cleanup:"
-ls -lh "$CLEANUP_DIR"
-
-# Clean up demo directory
-rm -rf "$CLEANUP_DIR"
-```
-
-<!-- end_slide -->
-
-# Workshop Challenge 🏆
-
-## Challenge: System Monitor Dashboard
-
-**Create a script named `monitor.sh` that:**
-
-1. Displays system hostname and current date/time
-2. Shows current user and their home directory
-3. Lists the top 3 processes by CPU usage
-4. Shows disk usage of the root filesystem
-5. Counts total running processes
-6. Saves all output to `system_report_$(date +%Y%m%d).txt`
-
-**Bonus Points:**
-* Add color output using ANSI codes
-* Accept command-line argument for output filename
-* Create a loop that runs every 10 seconds
-
-**Time: 15 minutes**
-
-<!-- end_slide -->
-
-## Challenge Solution Template
-
-```bash
-#!/bin/bash
-
-# System Monitor Dashboard
-# Your name here
-
-OUTPUT_FILE="system_report_$(date +%Y%m%d).txt"
-
-# Header
-echo "==================================" | tee "$OUTPUT_FILE"
-echo "  SYSTEM MONITOR DASHBOARD" | tee -a "$OUTPUT_FILE"
-echo "==================================" | tee -a "$OUTPUT_FILE"
-echo "" | tee -a "$OUTPUT_FILE"
-
-# 1. System Info
-echo "🖥️  Hostname: $(hostname)" | tee -a "$OUTPUT_FILE"
-# TODO: Add more info
-
-# 2. User Info
-# TODO: Implement
-
-# 3. Top Processes
-echo "" | tee -a "$OUTPUT_FILE"
-echo "Top 3 Processes by CPU:" | tee -a "$OUTPUT_FILE"
-# TODO: Use ps command
-
-# 4. Disk Usage
-# TODO: Use df command
-
-# 5. Process Count
-# TODO: Count processes
-
-echo "" | tee -a "$OUTPUT_FILE"
-echo "Report saved to: $OUTPUT_FILE"
-```
-
-<!-- end_slide -->
-
-## Best Practices Summary
-
-**Writing Better Shell Scripts:**
-
-1. **Always use shebang** (`#!/bin/bash`)
-2. **Add comments** to explain complex logic
-3. **Use meaningful variable names**
-   * Good: `BACKUP_DIR`, `USER_NAME`
-   * Bad: `x`, `tmp`, `data`
-4. **Quote variables** (`"$VAR"` not `$VAR`)
-5. **Check for errors**
-   * Use `set -e` to exit on errors
-   * Check exit status: `if [ $? -ne 0 ]; then`
-6. **Make scripts modular** with functions
-7. **Add usage instructions** (`--help` option)
-
-<!-- end_slide -->
-
 ## Common Pitfalls to Avoid
 
 **Mistakes beginners make:**
@@ -985,33 +701,6 @@ trap 'echo "Error at line $LINENO"' ERR
 
 <!-- end_slide -->
 
-## Advanced Topics to Explore
-
-**Next steps in your shell scripting journey:**
-
-1. **Functions and Modularity**
-   * Create reusable code blocks
-   * Pass parameters to functions
-
-2. **Regular Expressions (regex)**
-   * Pattern matching with `grep`, `sed`, `awk`
-
-3. **File Descriptors and Redirection**
-   * `>`, `>>`, `2>`, `&>`, `|`, `tee`
-
-4. **Command Substitution**
-   * `$()` vs backticks
-
-5. **Array Manipulation**
-   * Indexed and associative arrays
-
-6. **Signal Handling with trap**
-
-7. **Parallel Processing**
-   * `xargs -P`, GNU parallel
-
-<!-- end_slide -->
-
 ## Bonus: Quick Reference Card
 
 **Essential Commands:**
@@ -1025,8 +714,35 @@ trap 'echo "Error at line $LINENO"' ERR
 | **I/O** | `read`, `echo`, `printf`, `>`, `>>` |
 | **Exit** | `exit 0`, `$?` |
 
+# Cron (Run scripts automatically)
+
+Cron = Linux scheduler that runs commands at fixed times.
+
+Edit your cron jobs:
+```bash
+crontab -e
+```
+Example: Run a script every day at 2:00 AM
+```bash
+0 2 * * * /home/user/helper.sh
+```
+
+
 **Keyboard Shortcuts:**
 * `Ctrl+C` - Interrupt
 * `Ctrl+Z` - Suspend
 * `Ctrl+D` - EOF
 * `Ctrl+L` - Clear screen
+
+<!-- end_slide -->
+
+```bash
+  _______ _                 _                      
+ |__   __| |               | |                     
+    | |  | |__   __ _ _ __ | | __  _   _  ___  _   _ 
+    | |  | '_ \ / _` | '_ \| |/ / | | | |/ _ \| | | |
+    | |  | | | | (_| | | | |   <  | |_| | (_) | |_| |
+    |_|  |_| |_|\__,_|_| |_|_|\_\  \__, |\___/ \__,_|
+                                    __/ |            
+                                   |___/
+```
