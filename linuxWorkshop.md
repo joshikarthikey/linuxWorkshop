@@ -24,31 +24,6 @@ options:
 
 <!-- pause -->
 
-**Today's Journey:**
-
-<!-- incremental_lists: true -->
-
-1. What is Linux?
-2. Kernel vs Operating System
-3. Why Linux? (vs Windows/Mac)
-4. Why Linux as Students?
-5. History of Linux
-6. How Linux Works & WSL
-7. Setting Up WSL
-8. Ubuntu
-9. Terminal & Shell
-10. Let's Dive In!
-
-<!-- speaker_note:
-60-minute focused workshop
-Start with fundamentals, build up to practice
-Logical flow from concepts to hands-on
--->
-
-<!-- end_slide -->
-
-<!-- jump_to_middle -->
-
 # What is Linux? 
 
 <!-- end_slide -->
@@ -165,24 +140,6 @@ Kernel + Shell + Utilities + Applications
 * Different "distributions" package it differently
 
 <!-- pause -->
-
-```mermaid
-graph LR
-    A[Linux Kernel<br/>15%] + B[GNU Tools<br/>30%] + C[Desktop<br/>20%] + D[Apps<br/>35%] = E[Complete Linux OS<br/>100%]
-    
-    style A fill:#f96,stroke:#333,stroke-width:3px
-    style B fill:#ff9,stroke:#333
-    style C fill:#9cf,stroke:#333
-    style D fill:#9f9,stroke:#333
-    style E fill:#c8e6c9,stroke:#333,stroke-width:3px
-```
-
-<!-- speaker_note:
-"Linux" commonly refers to the whole OS
-But technically it's just the kernel
-GNU provides most of the tools
-Together they make a complete system
--->
 
 <!-- end_slide -->
 
